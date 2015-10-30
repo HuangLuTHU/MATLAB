@@ -18,6 +18,8 @@ t0 = 0.01:0.01:1;
 for m = 1:100
     if x0(m) == 1
         x1((m-1)*100+1:m*100) = sin(2*pi*f0*t0);
+    else
+        x1((m-1)*100+1:m*100) = sin(2*pi*f0*t0+pi);
     end
 end
 X1 = fftshift(fft(x1));
@@ -41,8 +43,7 @@ ylabel('H(e^j^\omega)')
 title('Power Spectrum Density of BPSK Modulation Wave')
 
 % BPSK Coherent demodulation
-xr = sin(2*pi*f0*(0.01:0.01:100));
-x2 = xr .* x1;
-plot(x2(1:1000))
-plot(abs(fftshift(fft(x2))))
-
+% xr = sin(2*pi*f0*(0.01:0.01:100));
+% x2 = xr .* x1;
+% plot(x2(1:1000))
+% plot(abs(fftshift(fft(x2))))
