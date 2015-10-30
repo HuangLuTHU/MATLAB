@@ -171,7 +171,7 @@ title('Power Spectrum Density of Original Signal');
 xlabel('Frequency(\omega)'), ylabel('Power Spectrum')
 set(gca,'xtick',[0:250:1000],'xticklabel',{'-\pi', '-\pi/2', '0','\pi/2','\pi'}) 
 X_AMI = fftshift(fft(AMI_code0));
-subplot(2,2,2); plot(abs(X_AMI))
+subplot(2,2,2); plot(abs(X_AMI),'r')
 title('Power Spectrum Density of AMI Code with Returing Zero');
 xlabel('Frequency(\omega)'), ylabel('Power Spectrum')
 set(gca,'xtick',[0:500:2000],'xticklabel',{'-\pi', '-\pi/2', '0','\pi/2','\pi'})
