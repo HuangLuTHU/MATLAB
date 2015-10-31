@@ -114,14 +114,14 @@ set(gca,'Xlim', [1, 41])
 set(gca,'xtick',[1:2:41],'xticklabel',[0:1:20]) 
 grid on;
 subplot(4,1,3); stairs(HDB3_code(1:41),'r');% Figure of the HDB3 Code
-title('HDb3 Code')
+title('HDB3 Code')
 set(gca,'Ylim', [-1.5, 1.5])
 set(gca,'Xlim', [1, 41])
 set(gca,'xtick',[1:2:41],'xticklabel',[0:1:20]) 
 grid on;
 subplot(4,1,4); stairs(Miller_code(1:41),'r');% Figure of the Miller Code
-title('HDb3 Code')
-set(gca,'Ylim', [-1.5, 1.5])
+title('Miller Code')
+set(gca,'Ylim', [-0.5, 1.5])
 set(gca,'Xlim', [1, 41])
 set(gca,'xtick',[1:2:41],'xticklabel',[0:1:20]) 
 grid on;
