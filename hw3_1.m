@@ -8,6 +8,10 @@ p0 = 0.8;                       % Probability of 0
 x0 = rand(1,1000);              % Uniform Distribution in [0,1]
 x0(x0<p0) = 0;                  % Get the Source Signal
 x0(x0>=p0) = 1;
+figure(1)
+stairs(x0)
+title('Original Signal')
+set(gca,'Ylim', [-0.5, 1.5])
 
 % AMI Code
 c1 = [1, 0];
@@ -100,7 +104,7 @@ while(m<=1000)
 end
 
 % Figure of all code
-figure(1); 
+figure(2); 
 subplot(4,1,1); stairs(x0(1:21),'r'); % Figure of the Original Signal
 title('Original Signal')
 set(gca,'Ylim', [-0.5, 1.5])
@@ -127,36 +131,40 @@ set(gca,'xtick',[1:2:41],'xticklabel',[0:1:20])
 grid on;
 
 % Power Spectrum Density
-figure(2)
+figure(3)
 X0 = fftshift(fft(x0));
 X0 = abs(X0).^2;
-X0 = X0/max(X0);
+X0 = 10*log10(X0/max(X0));
 subplot(2,2,1); plot(X0)
 title('Power Spectrum Density of Original Signal');
-xlabel('fT'), ylabel('Power Spectrum')
+xlabel('fT'), ylabel('Power Spectrum(dB)')
 set(gca, 'Xlim', [500,1000])
 set(gca,'xtick',[500:250:1000],'xticklabel',{'0', '0.5', '1.0'}) 
+clear x0 X0
 X_AMI = fftshift(fft(AMI_code));
 X_AMI = abs(X_AMI).^2;
-X_AMI = X_AMI/max(X_AMI);
+X_AMI = 10*log10(X_AMI/max(X_AMI));
 subplot(2,2,2); plot(X_AMI)
 title('Power Spectrum Density of AMI Code with Returing Zero');
-xlabel('fT'), ylabel('Power Spectrum')
+xlabel('fT'), ylabel('Power Spectrum(dB)')
 set(gca, 'Xlim', [1000, 2000])
 set(gca,'xtick',[1000:500:2000],'xticklabel',{'0', '0.5', '1.0'})
+clear AMI_code X_AMI
 X_HDB3 = fftshift(fft(HDB3_code));
 X_HDB3 = abs(X_HDB3).^2;
-X_HDB3 = X_HDB3/max(X_HDB3);
+X_HDB3 = 10*log10(X_HDB3/max(X_HDB3));
 subplot(2,2,3); plot(X_HDB3)
 title('Power Spectrum Density of HDB3 Code');
-xlabel('fT'), ylabel('Power Spectrum')
+xlabel('fT'), ylabel('Power Spectrum(dB)')
 set(gca, 'Xlim', [1000, 2000])
 set(gca,'xtick',[1000:500:2000],'xticklabel',{'0', '0.5', '1.0'})
+clear HDB3_code X_HDB3
 X_Miller = fftshift(fft(Miller_code));
 X_Miller = abs(X_Miller).^2;
-X_Miller = X_Miller/max(X_Miller);
+X_Miller = 10*log10(X_Miller/max(X_Miller));
 subplot(2,2,4); plot(X_Miller)
 title('Power Spectrum Density of Miller Code');
-xlabel('fT'), ylabel('Power Spectrum')
+xlabel('fT'), ylabel('Power Spectrum(dB)')
 set(gca, 'Xlim', [1000, 2000])
 set(gca,'xtick',[1000:500:2000],'xticklabel',{'0', '0.5', '1.0'})
+clear all;

@@ -8,6 +8,9 @@ p0 = 0.8;                       % Probability of 0
 x0 = rand(1,1000);              % Uniform Distribution in [0,1]
 x0(x0<p0) = 0;                  % Get the Source Signal
 x0(x0>=p0) = 1;
+figure(1); stairs(x0)
+title('Original Signal')
+set(gca,'Ylim', [-0.5, 1.5])
 
 % AMI Code
 c1 = [1, 0];
@@ -133,26 +136,26 @@ for m = 1:length(Miller_code)
 end
 clear Miller_code
 
-figure(1); 
-subplot(4,1,1); plot(xx0(1:160),'r'); % Figure of the Original Signal
+figure(2); 
+subplot(4,1,1); stairs(xx0(1:160),'r'); % Figure of the Original Signal
 title('Original Signal')
 set(gca,'Ylim', [-0.5, 1.5])
 set(gca,'Xlim', [1, 161])
 set(gca,'xtick',[1:8:161],'xticklabel',[0:1:20]) 
 grid on;
-subplot(4,1,2); plot(xx_AMI(1:160),'r');% Figure of the AMI Code
+subplot(4,1,2); stairs(xx_AMI(1:160),'r');% Figure of the AMI Code
 title('AMI Code')
 set(gca,'Ylim', [-1.5, 1.5])
 set(gca,'Xlim', [1, 161])
 set(gca,'xtick',[1:8:161],'xticklabel',[0:1:20]) 
 grid on;
-subplot(4,1,3); plot(xx_HDB3(1:160),'r');% Figure of the HDB3 Code
+subplot(4,1,3); stairs(xx_HDB3(1:160),'r');% Figure of the HDB3 Code
 title('HDB3 Code')
 set(gca,'Ylim', [-1.5, 1.5])
 set(gca,'Xlim', [1, 161])
 set(gca,'xtick',[1:8:161],'xticklabel',[0:1:20]) 
 grid on;
-subplot(4,1,4); plot(xx_Miller(1:160),'r');% Figure of the Miller Code
+subplot(4,1,4); stairs(xx_Miller(1:160),'r');% Figure of the Miller Code
 title('Miller Code')
 set(gca,'Ylim', [-0.5, 1.5])
 set(gca,'Xlim', [1, 161])
@@ -161,36 +164,40 @@ grid on;
 
 
 % Power Spectrum Density
-figure(2)
+figure(3)
 X0 = fftshift(fft(xx0));
 X0 = abs(X0).^2;
-X0 = X0/max(X0);
+X0 = 10*log10(X0/max(X0));
 subplot(2,2,1); plot(X0)
 title('Power Spectrum Density of Original Signal');
-xlabel('fT'), ylabel('Power Spectrum')
+xlabel('fT'), ylabel('Power Spectrum(dB)')
 set(gca, 'Xlim', [4000,5000])
 set(gca,'xtick',[4000:500:5000],'xticklabel',{'0', '0.5', '1.0'}) 
+clear xx0 X0
 X_AMI = fftshift(fft(xx_AMI));
 X_AMI = abs(X_AMI).^2;
-X_AMI = X_AMI/max(X_AMI);
+X_AMI = 10*log10(X_AMI/max(X_AMI));
 subplot(2,2,2); plot(X_AMI)
-title('Power Spectrum Density of AMI Code with Returing Zero');
-xlabel('fT'), ylabel('Power Spectrum')
+title('Power Spectrum Density of AMI Code');
+xlabel('fT'), ylabel('Power Spectrum(dB)')
 set(gca, 'Xlim', [4000,5000])
 set(gca,'xtick',[4000:500:5000],'xticklabel',{'0', '0.5', '1.0'}) 
+clear xx_AMI X_AMI
 X_HDB3 = fftshift(fft(xx_HDB3));
 X_HDB3 = abs(X_HDB3).^2;
-X_HDB3 = X_HDB3/max(X_HDB3);
+X_HDB3 = 10*log10(X_HDB3/max(X_HDB3));
 subplot(2,2,3); plot(X_HDB3)
 title('Power Spectrum Density of HDB3 Code');
-xlabel('fT'), ylabel('Power Spectrum')
+xlabel('fT'), ylabel('Power Spectrum(dB)')
 set(gca, 'Xlim', [4000,5000])
 set(gca,'xtick',[4000:500:5000],'xticklabel',{'0', '0.5', '1.0'}) 
+clear xx_HDB3 X_HDB3
 X_Miller = fftshift(fft(xx_Miller));
 X_Miller = abs(X_Miller).^2;
-X_Miller = X_Miller/max(X_Miller);
+X_Miller = 10*log(X_Miller/max(X_Miller));
 subplot(2,2,4); plot(X_Miller)
 title('Power Spectrum Density of Miller Code');
-xlabel('fT'), ylabel('Power Spectrum')
+xlabel('fT'), ylabel('Power Spectrum(dB)')
 set(gca, 'Xlim', [4000,5000])
 set(gca,'xtick',[4000:500:5000],'xticklabel',{'0', '0.5', '1.0'}) 
+clear all;
