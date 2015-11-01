@@ -1,6 +1,6 @@
 function [out, N] = Sample_Judge(in, L, M)
 % % Created by Huang Lu, Department of Electronic Engineering, Tsinghua University
-% 2015/11/01, Friday, Beijing
+% 2015/11/01, Sunday, Beijing
 % Code for Homework 3 of Communication and Network
 % Sample and Judge
 
