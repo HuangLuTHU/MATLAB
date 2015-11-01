@@ -11,7 +11,7 @@ x0(x0>=0.5) = 1;
 % BPSK Modulation
 x2 = zeros(1, 100*100);
 f0 = 10;
-t0 = 0.01:0.01:1;
+t0 = 0:0.01:0.99;
 for m = 1:100
     if x0(m) == 1
         x2((m-1)*100+1:m*100) = sin(2*pi*f0*t0);
@@ -42,7 +42,7 @@ X2 = fftshift(fft(x2));
 % title('Power Spectrum Density of BPSK Modulation Wave')
 
 % BPSK Coherent Demodulation
-xr = sin(2*pi*f0*(0.01:0.01:100)).*x2;
+xr = sin(2*pi*f0*(0:0.01:99.99)).*x2;
 h1 = ones(1,10);
 x3 = conv(xr,h1);
 x3 = x3(4:10003);
@@ -101,45 +101,134 @@ x6 = x4 >= 0;
 
 % BPSK Non-coherent Demodulation
 f0 = 10.05;
-xr = sin(2*pi*f0*(0.01:0.01:100)).*x2;
+xr = sin(2*pi*f0*(0:0.01:99.99)).*x2;
 h1 = ones(1,10);
 x3 = conv(xr,h1);
 x3 = x3(4:10003);
 x5 = x3 >= 0;
-figure(4)
-subplot(3,2,1), stairs(x0(1:21),'r')
-set(gca, 'Xlim', [1, 21])
+% figure(4)
+% subplot(3,2,1), stairs(x0(1:21),'r')
+% set(gca, 'Xlim', [1, 21])
+% set(gca, 'Ylim', [-0.5, 1.5])
+% set(gca,'xtick',[1:1:21],'xticklabel',[0:1:20])
+% title('Wave of Original Signal')
+% grid on;
+% subplot(3,2,3), plot(x1(1:2001),'r')       % figure of original signal
+% set(gca, 'Xlim', [1, 2001])
+% set(gca, 'Ylim', [-0.5, 1.5])
+% set(gca,'xtick',[1:100:2001],'xticklabel',[0:1:20])
+% title('Sample Wave of Original Signal')
+% grid on
+% subplot(3,2,5); plot(x2(1:2001),'r');
+% set(gca, 'Xlim', [1, 2001])
+% set(gca, 'Ylim', [-1.5, 1.5])
+% set(gca,'xtick',[1:100:2001],'xticklabel',[0:1:20])
+% title('Wave after Modulation')
+% grid on
+% subplot(3,2,2); plot(xr(1:2001),'r');
+% set(gca, 'Xlim', [1, 2001])
+% set(gca, 'Ylim', [-1.5, 1.5])
+% set(gca,'xtick',[1:100:2001],'xticklabel',[0:1:20])
+% title('Wave after Multiplied by Carrier')
+% grid on
+% subplot(3,2,4); plot(x3(1:2001),'r')
+% set(gca, 'Xlim', [1, 2001])
+% set(gca,'xtick',[1:100:2001],'xticklabel',[0:1:20])
+% title('Wave after Demodulation by Ten 1')
+% grid on
+% subplot(3,2,6); plot(x5(1:2001),'r')
+% set(gca, 'Xlim', [1, 2001])
+% set(gca, 'Ylim', [-0.5, 1.5])
+% set(gca,'xtick',[1:100:2001],'xticklabel',[0:1:20])
+% title('Wave after Judged by Ten 1')
+% grid on
+
+% DPSK Modulation & Differential Coherent Demodulation x10, x10.25 or x10.5
+save('data.mat', 'x0');
+clear all;
+load data.mat;
+f0 = 10;
+% f0 = 10.25;
+% f0 = 10.5;
+xdiff = zeros(1,100);
+xdiff(1) = x0(1);
+for m = 2:100
+    xdiff(m) = (xdiff(m-1) ~= x0(m));
+end
+xa = zeros(1, 100*100);
+t0 = 0:0.01:0.99;
+m = 1;
+if xdiff(1) == 1
+    xa((m-1)*100+1:m*100) = sin(2*pi*f0*t0);
+else
+    xa((m-1)*100+1:m*100) = sin(2*pi*f0*t0+pi);
+end
+k0 = xdiff(m);
+for m = 2:100
+    if xdiff(m) == k0 && k0 == 1
+        xa((m-1)*100+1:m*100) = sin(2*pi*f0*t0);
+    elseif xdiff(m) == k0 && k0 == 0
+        xa((m-1)*100+1:m*100) = sin(2*pi*f0*t0+pi);
+    elseif xdiff(m) ~= k0 && k0 == 1
+        xa((m-1)*100+1:m*100) = sin(2*pi*f0*t0+pi);
+    else
+        xa((m-1)*100+1:m*100) = sin(2*pi*f0*t0);
+    end
+    k0 = xdiff(m);
+end
+xc = xa(101:10000) .* xa(1:9900);
+h0 = ones(1,10);
+xd = conv(h0, xc);
+xe = xd <= 0;
+figure(5)
+suptitle('DPSK Modulation & Differential Coherent Demodulation x10')
+% suptitle('DPSK Modulation & Differential Coherent Demodulation x10.25')
+% suptitle('DPSK Modulation & Differential Coherent Demodulation x10.5')
+subplot(4,2,1); stairs(x0(1:12),'r')
+set(gca, 'Xlim', [1, 12])
 set(gca, 'Ylim', [-0.5, 1.5])
-set(gca,'xtick',[1:1:21],'xticklabel',[0:1:20])
+set(gca,'xtick',[1:1:12],'xticklabel',[0:1:12])
 title('Wave of Original Signal')
 grid on;
-subplot(3,2,3), plot(x1(1:2001),'r')       % figure of original signal
-set(gca, 'Xlim', [1, 2001])
+subplot(4,2,3); stairs(xdiff(1:12),'r')
+set(gca, 'Xlim', [1, 12])
 set(gca, 'Ylim', [-0.5, 1.5])
-set(gca,'xtick',[1:100:2001],'xticklabel',[0:1:20])
-title('Sample Wave of Original Signal')
-grid on
-subplot(3,2,5); plot(x2(1:2001),'r');
-set(gca, 'Xlim', [1, 2001])
+set(gca,'xtick',[1:1:12],'xticklabel',[0:1:12])
+title('Wave of Differential Signal')
+grid on;
+subplot(4,2,5); plot(sin(2*pi*f0*(0:0.01:11.99)), 'r')
+set(gca, 'Xlim', [1, 1201])
 set(gca, 'Ylim', [-1.5, 1.5])
-set(gca,'xtick',[1:100:2001],'xticklabel',[0:1:20])
-title('Wave after Modulation')
-grid on
-subplot(3,2,2); plot(xr(1:2001),'r');
-set(gca, 'Xlim', [1, 2001])
+set(gca,'xtick',[1:100:1201],'xticklabel',[0:1:12])
+title('Wave of the Carrier')
+subplot(4,2,7); plot(xa(1:1200), 'r')
+set(gca, 'Xlim', [1, 1201])
 set(gca, 'Ylim', [-1.5, 1.5])
-set(gca,'xtick',[1:100:2001],'xticklabel',[0:1:20])
-title('Wave after Multiplied by Carrier')
+set(gca,'xtick',[1:100:1201],'xticklabel',[0:1:12])
+title('(a): Wave after Modulation')
 grid on
-subplot(3,2,4); plot(x3(1:2001),'r')
-set(gca, 'Xlim', [1, 2001])
-set(gca,'xtick',[1:100:2001],'xticklabel',[0:1:20])
-title('Wave after Demodulation by Ten 1')
+subplot(4,2,2); plot(xa(1:1100), 'r')
+set(gca, 'Xlim', [-99, 1101])
+set(gca, 'Ylim', [-1.5, 1.5])
+set(gca,'xtick',[-99:100:1101],'xticklabel',[0:1:12])
+title('(b): Wave Delayed')
 grid on
-subplot(3,2,6); plot(x5(1:2001),'r')
-set(gca, 'Xlim', [1, 2001])
+subplot(4,2,4); plot(xc(1:1000), 'r')
+set(gca, 'Xlim', [-99, 1101])
+set(gca, 'Ylim', [-1.5, 1.5])
+set(gca,'xtick',[-99:100:1101],'xticklabel',[0:1:12])
+title('(c): Wave after Multiplying')
+grid on
+subplot(4,2,6); plot(xd(1:1000), 'r')
+set(gca, 'Xlim', [-99, 1101])
+set(gca, 'Ylim', [-7.5, 7.5])
+set(gca,'xtick',[-99:100:1101],'xticklabel',[0:1:12])
+title('(d): Wave after filtering')
+grid on
+subplot(4,2,8); plot(xe(1:1000), 'r')
+set(gca, 'Xlim', [-99, 1101])
 set(gca, 'Ylim', [-0.5, 1.5])
-set(gca,'xtick',[1:100:2001],'xticklabel',[0:1:20])
-title('Wave after Judged by Ten 1')
+set(gca,'xtick',[-99:100:1101],'xticklabel',[0:1:12])
+title('(e): Wave after Judge')
 grid on
 
