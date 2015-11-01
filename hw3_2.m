@@ -81,7 +81,7 @@ grid on
 subplot(4,2,2); plot(x3(1:1001),'r')
 set(gca, 'Xlim', [1, 1001])
 set(gca,'xtick',[1:100:1001],'xticklabel',[0:1:10])
-title('Wave after Demodulation by Ten 1')
+title('Wave after Filter by Ten 1')
 grid on
 subplot(4,2,4); stairs(x5(1:11),'r')
 set(gca, 'Xlim', [1, 11])
@@ -92,7 +92,7 @@ grid on
 subplot(4,2,6); plot(x4(1:1001),'r')
 set(gca, 'Xlim', [1, 1001])
 set(gca,'xtick',[1:100:1001],'xticklabel',[0:1:10])
-title('Wave after Demodulation by Twelve 1')
+title('Wave after Filter by Twelve 1')
 grid on
 subplot(4,2,8); stairs(x6(1:11),'r')
 set(gca, 'Xlim', [1, 11])
