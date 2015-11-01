@@ -200,4 +200,49 @@ title('Power Spectrum Density of Miller Code');
 xlabel('fT'), ylabel('Power Spectrum(dB)')
 set(gca, 'Xlim', [4000,5000])
 set(gca,'xtick',[4000:500:5000],'xticklabel',{'0', '0.5', '1.0'}) 
+
+% Power Spectrum of AMI Code with Different Probability of 0 
 clear all;
+p = [0.05, 0.20, 0.40, 0.60, 0.80, 0.95]; % Probability of 0                     
+figure(4)
+suptitle('Power Spectrum of AMI Codes')
+for mm = 1:6
+    x0 = rand(1,1000);         % Uniform Distribution in [0,1]
+    x0(x0<p(mm)) = 0;           % Get the Source Signal
+    x0(x0>=p(mm)) = 1;
+    c1 = [1, 0];
+    c2 = [0, 0];
+    c3 = [-1, 0];
+    AMI_code = zeros(1, 2000);   % AMI Code with Returning to 0
+    f1 = x0(1);                   % Initial the fk, fk = fk-1 = x(0)    
+    for m = 1:1:1000
+        f0 = f1;                    % Update fk-1
+        f1 = ~(x0(m)==f0);          % Update fk
+        if x0(m) == 0               % Get AMI Code
+            AMI_code(2*m-1:2*m) = c2;
+        else
+            if f1 == 1
+                AMI_code(2*m-1:2*m) = c1;
+            else
+                AMI_code(2*m-1:2*m) = c3;
+            end
+        end
+    end
+    xx_AMI = zeros(1, 8000);
+    for m = 1:length(AMI_code)
+        if AMI_code(m) == 1;
+            xx_AMI((m-1)*4+1:m*4) = [1,1,1,1];
+        elseif AMI_code(m) == -1;
+            xx_AMI((m-1)*4+1:m*4) = [-1,-1,-1,-1];
+        end
+    end
+    X_AMI = fftshift(fft(xx_AMI));
+    X_AMI = abs(X_AMI).^2;
+    X_AMI = 10*log10(X_AMI/max(X_AMI));
+    subplot(3,2,mm); plot(X_AMI)
+    title(['p(0)=',num2str(p(mm))]);
+    xlabel('fT'), ylabel('Power Spectrum(dB)')
+    set(gca,'Xlim', [4000,5000])
+    set(gca,'Ylim', [-80,0])
+    set(gca,'xtick',[4000:500:5000],'xticklabel',{'0', '0.5', '1.0'})
+end
